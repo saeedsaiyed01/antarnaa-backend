@@ -30,21 +30,8 @@ app.get("/", (req, res) => {
   });
 });
 
-// API test endpoint
-app.get("/api", (req, res) => {
-  res.json({
-    message: "API is working!",
-    availableRoutes: [
-      "POST /api/auth/signup/initiate",
-      "POST /api/auth/login",
-      "POST /api/auth/doctor-login",
-      "POST /api/auth/admin-login"
-    ]
-  });
-});
-
-// Simple signup route for testing
-app.post("/api/auth/signup/initiate", async (req, res) => {
+// Auth routes (without /api prefix to match frontend expectations)
+app.post("/auth/signup/initiate", async (req, res) => {
   try {
     const { username, countryCode, number, email, dob, gender, password } = req.body;
 
@@ -61,6 +48,57 @@ app.post("/api/auth/signup/initiate", async (req, res) => {
     console.error("Signup error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+app.post("/auth/login", async (req, res) => {
+  try {
+    const { number, password } = req.body;
+
+    if (!number || !password) {
+      return res.status(400).json({ error: "Phone number and password are required" });
+    }
+
+    // Simple login response for testing
+    res.json({
+      message: "Login successful",
+      token: "test-token-12345",
+      user: { number }
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
+app.post("/auth/forgot-password/send-otp", async (req, res) => {
+  try {
+    const { number } = req.body;
+
+    if (!number) {
+      return res.status(400).json({ error: "Phone number is required" });
+    }
+
+    // Simple OTP response for testing
+    res.json({
+      message: "OTP sent successfully to " + number
+    });
+  } catch (error) {
+    console.error("Send OTP error:", error);
+    res.status(500).json({ error: "Failed to send OTP" });
+  }
+});
+
+// API test endpoint (with /api prefix)
+app.get("/api", (req, res) => {
+  res.json({
+    message: "API is working!",
+    availableRoutes: [
+      "POST /auth/signup/initiate",
+      "POST /auth/login",
+      "POST /auth/forgot-password/send-otp"
+    ],
+    note: "Routes without /api prefix to match frontend expectations"
+  });
 });
 
 // Health check endpoint

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import client from "prom-client";
-import app from "./app";
+import app from "./app.js";
 
 dotenv.config();
 if (
@@ -67,11 +67,19 @@ app.get("/metrics", async (req, res) => {
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Metrics available at http://localhost:${PORT}/metrics`);
-    });
+    console.log("MongoDB connected successfully");
+    console.log(`Metrics available at http://localhost:${PORT}/metrics`);
   })
   .catch((err) => {
     console.error("MongoDB connection failed:", err);
   });
+
+// Export for Vercel serverless deployment
+export default app;
+
+// For local development
+if (require.main === module) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}

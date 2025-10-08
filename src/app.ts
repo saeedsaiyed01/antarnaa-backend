@@ -1,16 +1,16 @@
 // src/app.ts
-import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import doctorRoutes from "./routes/doctorRoutes";
-import adminRoutes from "./routes/adminRoutes";
-import bookingRoutes from "./routes/bookingRoutes";
-import prescriptionRoutes from "./routes/prescriptionRoutes";
+import express from "express";
 import morgan from "morgan";
-import errorHandler from "./middleware/errors";
 import path from "path";
+import errorHandler from "./middleware/errors";
+import adminRoutes from "./routes/adminRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import doctorRoutes from "./routes/doctorRoutes.js";
+import prescriptionRoutes from "./routes/prescriptionRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 const app = express();

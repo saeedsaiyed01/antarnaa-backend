@@ -2,14 +2,6 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const authRoutes = require('../dist/routes/authRoutes');
-const userRoutes = require('../dist/routes/userRoutes');
-const doctorRoutes = require('../dist/routes/doctorRoutes');
-const adminRoutes = require('../dist/routes/adminRoutes');
-const bookingRoutes = require('../dist/routes/bookingRoutes');
-const prescriptionRoutes = require('../dist/routes/prescriptionRoutes');
-const morgan = require('morgan');
-const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -23,19 +15,53 @@ app.use(cors({
   methods: ["*"],
   allowedHeaders: ["*"],
 }));
-app.use(morgan("dev"));
 app.use(express.json());
 
-// Serve static files from the 'uploads' directory
-app.use("/api/uploads", express.static(path.join(__dirname, "../../uploads")));
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Antarnaa Backend Server is running!",
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: "/",
+      api: "/api/*"
+    }
+  });
+});
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/doctor", doctorRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/bookings", bookingRoutes);
-app.use("/api/prescriptions", prescriptionRoutes);
+// API test endpoint
+app.get("/api", (req, res) => {
+  res.json({
+    message: "API is working!",
+    availableRoutes: [
+      "POST /api/auth/signup/initiate",
+      "POST /api/auth/login",
+      "POST /api/auth/doctor-login",
+      "POST /api/auth/admin-login"
+    ]
+  });
+});
+
+// Simple signup route for testing
+app.post("/api/auth/signup/initiate", async (req, res) => {
+  try {
+    const { username, countryCode, number, email, dob, gender, password } = req.body;
+
+    if (!username || !number || !email || !password) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // For now, just return success - implement full logic later
+    res.json({
+      message: "Signup initiated successfully",
+      data: { username, number, email }
+    });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Health check endpoint
 app.get("/", (req, res) => {

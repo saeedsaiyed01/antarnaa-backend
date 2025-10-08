@@ -1,7 +1,7 @@
-import app from "./app";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import client from "prom-client";
+import app from "./app";
 
 dotenv.config();
 if (
@@ -43,6 +43,15 @@ app.use((req, res, next) => {
   });
 
   next();
+});
+
+// Add health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Antarnaa Backend Server is running!",
+    status: "healthy",
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Add metrics endpoint using default registry

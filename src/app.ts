@@ -5,12 +5,12 @@ import express from "express";
 import morgan from "morgan";
 import path from "path";
 import errorHandler from "./middleware/errors";
-import adminRoutes from "./routes/adminRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import bookingRoutes from "./routes/bookingRoutes.js";
-import doctorRoutes from "./routes/doctorRoutes.js";
-import prescriptionRoutes from "./routes/prescriptionRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes";
+import authRoutes from "./routes/authRoutes";
+import bookingRoutes from "./routes/bookingRoutes";
+import doctorRoutes from "./routes/doctorRoutes";
+import prescriptionRoutes from "./routes/prescriptionRoutes";
+import userRoutes from "./routes/userRoutes";
 dotenv.config();
 
 const app = express();

@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2021",
-    "module": "ES2022",
+    "module": "CommonJS",
     "outDir": "./dist",
     "strict": true,
     "noImplicitAny": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true

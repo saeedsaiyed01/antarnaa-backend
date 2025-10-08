@@ -45,12 +45,30 @@ app.use((req, res, next) => {
   next();
 });
 
-// Add health check endpoint
+// Add health check endpoint at root
 app.get("/", (req, res) => {
   res.json({
     message: "Antarnaa Backend Server is running!",
     status: "healthy",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: "/",
+      metrics: "/metrics",
+      api: "/api/*"
+    }
+  });
+});
+
+// Add simple API test endpoint
+app.get("/api", (req, res) => {
+  res.json({
+    message: "API is working!",
+    routes: [
+      "/api/auth/signup/initiate",
+      "/api/auth/login",
+      "/api/auth/doctor-login",
+      "/api/auth/admin-login"
+    ]
   });
 });
 

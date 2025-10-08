@@ -67,19 +67,11 @@ app.get("/metrics", async (req, res) => {
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    console.log("MongoDB connected successfully");
-    console.log(`Metrics available at http://localhost:${PORT}/metrics`);
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Metrics available at http://localhost:${PORT}/metrics`);
+    });
   })
   .catch((err) => {
     console.error("MongoDB connection failed:", err);
   });
-
-// Export for Vercel serverless deployment
-export default app;
-
-// For local development
-if (require.main === module) {
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}

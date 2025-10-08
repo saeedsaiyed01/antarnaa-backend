@@ -22,6 +22,7 @@
     "pdfkit": "^0.17.1",
     "prom-client": "^15.1.3",
     "razorpay": "^2.8.7",
+    "serverless-http": "^4.0.0",
     "twilio": "^4.16.0",
     "uuid": "^9.0.0"
   },

@@ -22,24 +22,32 @@ app.get("/", (req, res) => {
   res.json({
     message: "Antarnaa Backend Server is running!",
     status: "healthy",
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: "/",
-      api: "/api/*"
-    }
+    timestamp: new Date().toISOString()
   });
 });
 
-// Auth routes (without /api prefix to match frontend expectations)
+// API info endpoint
+app.get("/api", (req, res) => {
+  res.json({
+    message: "API is working!",
+    availableRoutes: [
+      "POST /auth/signup/initiate",
+      "POST /auth/login",
+      "POST /auth/forgot-password/send-otp"
+    ]
+  });
+});
+
+// AUTH ROUTES (without /api prefix to match frontend)
 app.post("/auth/signup/initiate", async (req, res) => {
   try {
+    console.log("Signup initiate request:", req.body);
     const { username, countryCode, number, email, dob, gender, password } = req.body;
 
     if (!username || !number || !email || !password) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // For now, just return success - implement full logic later
     res.json({
       message: "Signup initiated successfully",
       data: { username, number, email }
@@ -52,13 +60,13 @@ app.post("/auth/signup/initiate", async (req, res) => {
 
 app.post("/auth/login", async (req, res) => {
   try {
+    console.log("Login request:", req.body);
     const { number, password } = req.body;
 
     if (!number || !password) {
       return res.status(400).json({ error: "Phone number and password are required" });
     }
 
-    // Simple login response for testing
     res.json({
       message: "Login successful",
       token: "test-token-12345",
@@ -72,13 +80,13 @@ app.post("/auth/login", async (req, res) => {
 
 app.post("/auth/forgot-password/send-otp", async (req, res) => {
   try {
+    console.log("Forgot password OTP request:", req.body);
     const { number } = req.body;
 
     if (!number) {
       return res.status(400).json({ error: "Phone number is required" });
     }
 
-    // Simple OTP response for testing
     res.json({
       message: "OTP sent successfully to " + number
     });
@@ -88,49 +96,24 @@ app.post("/auth/forgot-password/send-otp", async (req, res) => {
   }
 });
 
-// API test endpoint (with /api prefix)
-app.get("/api", (req, res) => {
-  res.json({
-    message: "API is working!",
+// Catch-all handler for undefined routes
+app.use("*", (req, res) => {
+  console.log(`Route not found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    error: "Route not found",
+    method: req.method,
+    path: req.originalUrl,
     availableRoutes: [
       "POST /auth/signup/initiate",
       "POST /auth/login",
       "POST /auth/forgot-password/send-otp"
-    ],
-    note: "Routes without /api prefix to match frontend expectations"
-  });
-});
-
-// Health check endpoint
-app.get("/", (req, res) => {
-  res.json({
-    message: "Antarnaa Backend Server is running!",
-    status: "healthy",
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: "/",
-      metrics: "/metrics",
-      api: "/api/*"
-    }
-  });
-});
-
-// API test endpoint
-app.get("/api", (req, res) => {
-  res.json({
-    message: "API is working!",
-    routes: [
-      "/api/auth/signup/initiate",
-      "/api/auth/login",
-      "/api/auth/doctor-login",
-      "/api/auth/admin-login"
     ]
   });
 });
 
 // Error handler middleware (must be last)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("Unhandled error:", err);
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
